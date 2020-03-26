@@ -2,7 +2,7 @@ import sys
 
 from PyQt5 import QtWidgets
 
-import shujuku
+import shujuku,readconfig
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from untitled import Ui_MainWindow
 from CanshuWindow import Canshu_Form
@@ -217,10 +217,13 @@ str3 = '0303000A0002E5EB'  # 读取瞬时流量
 str4 = '03040010000271EC'  # 读取状态
 
 if __name__ == "__main__":
-    relist = shujuku.sqlchaxun('select * from canshu')
-    port = str(relist[0][0]).strip()
-    betelv = str(relist[0][1]).strip()
-    print(relist)
+    readcon=readconfig.ReadConfig()
+    port=readcon.get_db('serial','串口')
+    #relist = shujuku.sqlchaxun('select * from canshu')
+    #port = str(relist[0][0]).strip()
+    #betelv = str(relist[0][1]).strip()
+    betelv=readcon.get_db('serial','比特率')
+    print(port,betelv)
     app = QApplication(sys.argv)
     mywin = Mymainform()
     canshuwin = Canshushezhi()
