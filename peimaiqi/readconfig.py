@@ -10,6 +10,7 @@ class ReadConfig:
         self.cf = configparser.ConfigParser()
         print(configpath)
         self.cf.read(configpath,encoding='UTF-8-sig')
+        #这里存在的问题是windows编辑配置文件保存后，会在文件前面加上‘\ufeff’,造成文件read失败，编码必须使用UTF-8-sig才行。
 
     def get_db(self, confstr,param):
         value = self.cf.get(confstr, param)
