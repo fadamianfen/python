@@ -11,7 +11,7 @@ class ReadConfig:
         print(configpath)
         self.cf.read(configpath,encoding='UTF-8-sig')
 
+
     def get_db(self, confstr,param):
         value = self.cf.get(confstr, param)
         return value
-
