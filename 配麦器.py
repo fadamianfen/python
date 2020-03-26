@@ -16,8 +16,6 @@ class Mymainform(QMainWindow, Ui_MainWindow):
         # self.cancel_Button.clicked.connect(self.close)
         # self.pushButton_2.clicked.connect(self.close)
     def closeEvent(self, event):
-        #global dakai
-        #dakai=False
         reply = QtWidgets.QMessageBox.question(self,
                                                '本程序',
                                                "不允许退出程序",

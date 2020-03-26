@@ -72,7 +72,7 @@ def sqlchaxun(sqlstr):
         host = readcon.get_db('database', 'host')
         db = readcon.get_db('database', 'db')
         user = readcon.get_db('database', 'user')
-        pwd = readcon.get_db('database', 'pwd')
+        pwd = 'FDMF123qiguanbu'
         ms = MSSQL(host, user, pwd, db)
         resList = ms.ExecQuery(sqlstr)
         return resList
@@ -85,7 +85,7 @@ def sqlzsg(sqlstr):
     readcon = readconfig.ReadConfig()  # 实例化读配置文件类。
     host = readcon.get_db('database', 'host')
     db = readcon.get_db('database', 'db')
-    user=readcon.get_db('database', 'user')
-    pwd=readcon.get_db('database', 'pwd')
+    user = readcon.get_db('database', 'user')
+    pwd = 'FDMF123qiguanbu'
     ms = MSSQL(host, user, pwd, db)
     ms.ExecNonQuery(sqlstr)
