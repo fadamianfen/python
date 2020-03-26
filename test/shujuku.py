@@ -1,4 +1,7 @@
-import pymssql,readconfig
+import pymssql
+from test import readconfig
+
+
 class MSSQL(object):
     '''
     对pymssql的简单封装

@@ -816,4 +816,3 @@ class Ui_MainWindow(object):
         self.action_8.setText(_translate("MainWindow", "班组报表"))
         self.action_9.setText(_translate("MainWindow", "月报表"))
         self.action_15.setText(_translate("MainWindow", "帮助"))
-import peimaiqi_rc

@@ -2,9 +2,9 @@ import sys
 
 from PyQt5 import QtWidgets
 
-import shujuku,readconfig
+from test import readconfig, shujuku
 from PyQt5.QtWidgets import QApplication, QMainWindow
-from untitled import Ui_MainWindow
+from test.untitled import Ui_MainWindow
 
 class Mymainform(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
@@ -60,7 +60,6 @@ class Mymainform(QMainWindow, Ui_MainWindow):
 # 串口模块区域
 import serial, threading, datetime, time, struct, binascii
 import serial.tools.list_ports
-from DateTime import *
 
 STRGLO = ""  # 读取的累计流量
 STRGLO1 = ""  # 读取的瞬时流量
@@ -170,7 +169,7 @@ str3 = '0303000A0002E5EB'  # 读取瞬时流量
 str4 = '03040010000271EC'  # 读取状态
 
 if __name__ == "__main__":
-    readcon=readconfig.ReadConfig()#实例化读配置文件类。
+    readcon= readconfig.ReadConfig()#实例化读配置文件类。
     port=readcon.get_db('serial','串口')
     betelv=readcon.get_db('serial','波特率')
     app = QApplication(sys.argv)
