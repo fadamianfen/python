@@ -13,6 +13,5 @@ class ReadConfig:
 
     def get_db(self, confstr,param):
         value = self.cf.get(confstr, param)
-        self.gss();
         return value
 

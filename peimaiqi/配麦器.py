@@ -2,9 +2,9 @@ import sys
 
 from PyQt5 import QtWidgets
 
-from test import readconfig, shujuku
+from peimaiqi import readconfig, shujuku
 from PyQt5.QtWidgets import QApplication, QMainWindow
-from test.untitled import Ui_MainWindow
+from peimaiqi.untitled import Ui_MainWindow
 
 class Mymainform(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
