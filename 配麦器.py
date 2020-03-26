@@ -5,8 +5,6 @@ from PyQt5 import QtWidgets
 import shujuku,readconfig
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from untitled import Ui_MainWindow
-from CanshuWindow import Canshu_Form
-#dakai=True
 
 class Mymainform(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
@@ -59,49 +57,6 @@ class Mymainform(QMainWindow, Ui_MainWindow):
     def bangzhu(self):  #
         pass
     def banzushezhi(self):  #
-        pass
-    def canshushezhi(self):  # 主窗口中菜单栏参数设置调用
-        canshuwin.OPEN()
-        canshuwin.Keyongserial()
-
-
-
-
-#参数设置子窗口类
-class Canshushezhi(QMainWindow, Canshu_Form):
-    def __init__(self, parent=None):
-        super(Canshushezhi, self).__init__()
-        self.setupUi(self)
-
-    def OPEN(self):
-        self.show()#
-
-    #设置可用端口和波特率的函数
-    def Keyongserial(self):
-        bete=['9600','11520']
-        canshuwin.comboBox_2.addItems(bete)
-
-        port_list = list(serial.tools.list_ports.comports())
-        if len(port_list) <= 0:
-            canshuwin.comboBox.currentText('无端口')
-        else:
-            port_list_0 = []
-            i = 0
-            while i < len(port_list):
-                port_list_0.append(list(port_list[i])[0])
-                i += 1
-            print(port_list_0)
-            canshuwin.comboBox.addItems(port_list_0)
-    def gengxinshujuku1(self):
-        s="update canshu set 串口='{0}',比特率='{1}' WHERE biaozhi='1'"
-        s=s.format(canshuwin.comboBox.currentText(),canshuwin.comboBox_2.currentText())
-        print(s)
-        shujuku.sqlzsg(s.strip())
-    #参数设置界面设置服务器数据的函数
-    def gengxinshujuku2(self):
-        pass
-    # 参数设置界面设置数据库数据的函数
-    def gengxinshujuku3(self):
         pass
 
 # 串口模块区域
@@ -217,16 +172,11 @@ str3 = '0303000A0002E5EB'  # 读取瞬时流量
 str4 = '03040010000271EC'  # 读取状态
 
 if __name__ == "__main__":
-    readcon=readconfig.ReadConfig()
+    readcon=readconfig.ReadConfig()#实例化读配置文件类。
     port=readcon.get_db('serial','串口')
-    #relist = shujuku.sqlchaxun('select * from canshu')
-    #port = str(relist[0][0]).strip()
-    #betelv = str(relist[0][1]).strip()
-    betelv=readcon.get_db('serial','比特率')
-    print(port,betelv)
+    betelv=readcon.get_db('serial','波特率')
     app = QApplication(sys.argv)
     mywin = Mymainform()
-    canshuwin = Canshushezhi()
     mywin.show()
     ser, ret = DOpenPort(port, betelv)
     sys.exit(app.exec_())

@@ -1,4 +1,4 @@
-import pymssql
+import pymssql,readconfig
 class MSSQL(object):
     '''
     对pymssql的简单封装
@@ -63,20 +63,29 @@ class MSSQL(object):
         self.connect.commit()
         self.connect.close()
 
+#数据库查询调用函数
 def sqlchaxun(sqlstr):
         ## ms = MSSQL(host="localhost",user="sa",pwd="123456",db="PythonWeiboStatistics")
         ## #返回的是一个包含tuple的list，list的元素是记录行，tuple的元素是每行记录的字段
         ## ms.ExecNonQuery("insert into WeiBoUser values('2','3')")
-
-        ms = MSSQL(host="192.168.4.2", user="sa", pwd="FDMF123qiguanbu", db="liaochengshengchan")
+        readcon = readconfig.ReadConfig()  # 实例化读配置文件类。
+        host = readcon.get_db('database', 'host')
+        db = readcon.get_db('database', 'db')
+        user = readcon.get_db('database', 'user')
+        pwd = readcon.get_db('database', 'pwd')
+        ms = MSSQL(host, user, pwd, db)
         resList = ms.ExecQuery(sqlstr)
         return resList
 
-
+#数据库增删改函数调用
 def sqlzsg(sqlstr):
     ## ms = MSSQL(host="localhost",user="sa",pwd="123456",db="PythonWeiboStatistics")
     ## #返回的是一个包含tuple的list，list的元素是记录行，tuple的元素是每行记录的字段
     ## ms.ExecNonQuery("insert into WeiBoUser values('2','3')")
-
-    ms = MSSQL(host="192.168.4.2", user="sa", pwd="FDMF123qiguanbu", db="liaochengshengchan")
+    readcon = readconfig.ReadConfig()  # 实例化读配置文件类。
+    host = readcon.get_db('database', 'host')
+    db = readcon.get_db('database', 'db')
+    user=readcon.get_db('database', 'user')
+    pwd=readcon.get_db('database', 'pwd')
+    ms = MSSQL(host, user, pwd, db)
     ms.ExecNonQuery(sqlstr)

@@ -8,10 +8,11 @@ class ReadConfig:
         if filepath:
             configpath = filepath
         else:
-            root_dir = os.path.dirname(os.path.abspath('.'))
+            root_dir = os.path.dirname(os.path.realpath(__file__))
             configpath = os.path.join(root_dir, "config.ini")
         self.cf = configparser.ConfigParser()
-        self.cf.read(configpath)
+        print(configpath)
+        self.cf.read(configpath,encoding='utf-8')
 
     def get_db(self, confstr,param):
         value = self.cf.get(confstr, param)
