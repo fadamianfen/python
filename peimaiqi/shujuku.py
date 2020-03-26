@@ -1,5 +1,5 @@
 import pymssql
-from test import readconfig
+from peimaiqi import readconfig
 
 
 class MSSQL(object):
