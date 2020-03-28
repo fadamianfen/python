@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'untitled.ui'
+# Form implementation generated from reading ui file
 #
 # Created by: PyQt5 UI code generator 5.14.1
 #
@@ -710,7 +710,7 @@ class Ui_MainWindow(object):
         self.line_57.setObjectName("line_57")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 18))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 23))
         self.menubar.setObjectName("menubar")
         self.menu = QtWidgets.QMenu(self.menubar)
         self.menu.setObjectName("menu")
@@ -740,11 +740,9 @@ class Ui_MainWindow(object):
         self.action_13.setObjectName("action_13")
         self.action_15 = QtWidgets.QAction(MainWindow)
         self.action_15.setObjectName("action_15")
-        self.menu.addSeparator()
         self.menu.addAction(self.action_15)
-        self.menu.addAction(self.action_5)
         self.menu.addSeparator()
-        self.menu.addAction(self.action_4)
+        self.menu.addAction(self.action_5)
         self.menu_3.addAction(self.action_7)
         self.menu_3.addAction(self.action_8)
         self.menu_3.addAction(self.action_9)
@@ -761,7 +759,6 @@ class Ui_MainWindow(object):
         self.pushButton.clicked.connect(MainWindow.shezhi1)
         self.pushButton_4.clicked.connect(MainWindow.shezhi2)
         self.pushButton_7.clicked.connect(MainWindow.shezhi3)
-        #self.action1.triggered.connect(MainWindow.canshushezhi)
         self.action_13.triggered.connect(MainWindow.banzushezhi)
         self.action_15.triggered.connect(MainWindow.bangzhu)
         self.action_5.triggered.connect(MainWindow.guanyu)
@@ -815,4 +812,9 @@ class Ui_MainWindow(object):
         self.action_7.setText(_translate("MainWindow", "日报表"))
         self.action_8.setText(_translate("MainWindow", "班组报表"))
         self.action_9.setText(_translate("MainWindow", "月报表"))
+        self.action1.setText(_translate("MainWindow", "参数设置"))
+        self.action1_2.setText(_translate("MainWindow", "网络设置"))
+        self.action_12.setText(_translate("MainWindow", "数据库设置"))
+        self.action_13.setText(_translate("MainWindow", "班组设置"))
         self.action_15.setText(_translate("MainWindow", "帮助"))
+import peimaiqi.peimaiqi_rc

@@ -5,6 +5,7 @@ from PyQt5 import QtWidgets
 from peimaiqi import readconfig, shujuku
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from peimaiqi.untitled import Ui_MainWindow
+import peimaiqi.crcmodbus as crc
 
 class Mymainform(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
@@ -27,19 +28,64 @@ class Mymainform(QMainWindow, Ui_MainWindow):
         else:
             event.ignore()
     def qidong1(self):  #
-        pass
+        try:
+            if (ser.is_open):
+                DWritePort(ser, str5)
+                time.sleep(0.5)
+                STRGLO5 = str(binascii.b2a_hex(ser.readline()))[2:-1]
+                print(STRGLO5)
+                if STRGLO5.__eq__(str5):
+                    mywin.label_34.setText("启动成功")
+                else:
+                    mywin.label_34.setText("启动失败")
+        except Exception as e:
+            print(e)
+            mywin.label_34.setText("启动失败")
     def qidong2(self):  #
         pass
     def qidong3(self):  #
         pass
     def tingzhi1(self):  #
-        pass
+        try:
+            if (ser.is_open):
+                DWritePort(ser, str6)
+                time.sleep(0.5)
+                STRGLO6 = str(binascii.b2a_hex(ser.readline()))[2:-1]
+                if STRGLO6.__eq__(str6):
+                    mywin.label_34.setText("停止成功")
+                else:
+                    mywin.label_34.setText("停止失败")
+        except Exception as e:
+            print(e)
+            mywin.label_34.setText("停止失败")
     def tingzhi2(self):  #
         pass
     def tingzhi3(self):  #
         pass
     def shezhi1(self):  #
-        pass
+        if crc.is_number(mywin.lineEdit.text().strip()):
+            st = crc.float_to_hex(float(mywin.lineEdit.text().strip()))
+            st1=str(crc.crc16Add(str7+st)).replace(' ','')
+            try:
+                if (ser.is_open):
+                    DWritePort(ser, st1)
+                    time.sleep(0.5)
+                    STRGLO7 = str(binascii.b2a_hex(ser.readline()))[2:-1]
+                    if STRGLO7.__eq__('031000000002402a'):
+                        mywin.label_34.setText("设置成功")
+                        #刷新一下前端显示
+                        DWritePort(ser, str1)
+                        time.sleep(1)
+                        STRGLO2 = str(binascii.b2a_hex(ser.readline()))[2:-1]
+                        flnum2 = round(struct.unpack('!f', bytes.fromhex(STRGLO2[10:14] + STRGLO2[6:10]))[0], 2)
+                        mywin.label_11.setText(str(flnum2))  # 目标流量
+
+                    else:
+                        mywin.label_34.setText("设置失败")
+            except Exception as e:
+                print(e)
+                mywin.label_34.setText("设置失败")
+
     def shezhi2(self):  #
         pass
     def shezhi3(self):  #
@@ -60,6 +106,7 @@ class Mymainform(QMainWindow, Ui_MainWindow):
 # 串口模块区域
 import serial, threading, datetime, time, struct, binascii
 import serial.tools.list_ports
+
 
 STRGLO = ""  # 读取的累计流量
 STRGLO1 = ""  # 读取的瞬时流量
@@ -95,6 +142,7 @@ def ReadData(ser):
             DWritePort(ser, str4)
             time.sleep(1)
             STRGLO3 = str(binascii.b2a_hex(ser.readline()))[11:12]
+            print(STRGLO3)
             if STRGLO3.__eq__('6'):
                 mywin.label_34.setText("正常运行")
             elif STRGLO3.__eq__('5'):
@@ -110,20 +158,20 @@ def ReadData(ser):
 
 
             try:
-                flnum = struct.unpack('!f', bytes.fromhex(STRGLO[10:14] + STRGLO[6:10]))[0]
+                flnum = round(struct.unpack('!f', bytes.fromhex(STRGLO[10:14] + STRGLO[6:10]))[0], 4)
                 mywin.label_3.setText(str(flnum))#累计流量
                 if hour>=7 and hour<19:
                     班组='白班'
                 else:
                     班组='夜班'
-                flnum1 = struct.unpack('!f', bytes.fromhex(STRGLO1[10:14] + STRGLO1[6:10]))[0]
+                flnum1 = round(struct.unpack('!f', bytes.fromhex(STRGLO1[10:14] + STRGLO1[6:10]))[0],4)
                 mywin.label_5.setText(str(flnum1))#瞬时流量
                 s = "INSERT INTO liuliang VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')"
                 sqlstr=s.format('聊城公司',班组,now.strftime("%Y-%m-%d"),now.strftime("%H:%M:%S"),STRGLO1[0:2],flnum,flnum1,0)
                 shujuku.sqlzsg(sqlstr)
 
-                flnum2 = struct.unpack('!f', bytes.fromhex(STRGLO2[10:14] + STRGLO2[6:10]))[0]
-                mywin.label_11.setText(str(flnum2))  # 累计流量
+                flnum2 = round(struct.unpack('!f', bytes.fromhex(STRGLO2[10:14] + STRGLO2[6:10]))[0],2)
+                mywin.label_11.setText(str(flnum2))  # 目标流量
 
             except Exception as e:
                 print(e)
@@ -167,6 +215,10 @@ str1 = '030300000002C5E9'  # 读取目标流量命令
 str2 = '030300080002442B'  # 读取累计流量
 str3 = '0303000A0002E5EB'  # 读取瞬时流量
 str4 = '03040010000271EC'  # 读取状态
+
+str5 = '0305000dff001c1b'  # 启动
+str6 = '0305000d00005deb'  # 停止
+str7 = '03100000000204'
 
 if __name__ == "__main__":
     readcon= readconfig.ReadConfig()#实例化读配置文件类。
