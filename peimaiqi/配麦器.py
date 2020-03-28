@@ -73,12 +73,8 @@ class Mymainform(QMainWindow, Ui_MainWindow):
                     STRGLO7 = str(binascii.b2a_hex(ser.readline()))[2:-1]
                     if STRGLO7.__eq__('031000000002402a'):
                         mywin.label_34.setText("设置成功")
-                        #刷新一下前端显示
-                        DWritePort(ser, str1)
-                        time.sleep(1)
-                        STRGLO2 = str(binascii.b2a_hex(ser.readline()))[2:-1]
-                        flnum2 = round(struct.unpack('!f', bytes.fromhex(STRGLO2[10:14] + STRGLO2[6:10]))[0], 2)
-                        mywin.label_11.setText(str(flnum2))  # 目标流量
+                        #刷新一下目标流量前端显示
+                        mywin.label_11.setText(mywin.lineEdit.text().strip())  # 目标流量
 
                     else:
                         mywin.label_34.setText("设置失败")
@@ -156,8 +152,9 @@ def ReadData(ser):
             else:
                 mywin.label_34.setText("空料报警")
 
-
             try:
+                flnum2 = round(struct.unpack('!f', bytes.fromhex(STRGLO2[10:14] + STRGLO2[6:10]))[0],2)
+                mywin.label_11.setText(str(flnum2))  # 目标流量
                 flnum = round(struct.unpack('!f', bytes.fromhex(STRGLO[10:14] + STRGLO[6:10]))[0], 4)
                 mywin.label_3.setText(str(flnum))#累计流量
                 if hour>=7 and hour<19:
@@ -168,15 +165,13 @@ def ReadData(ser):
                 mywin.label_5.setText(str(flnum1))#瞬时流量
                 s = "INSERT INTO liuliang VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')"
                 sqlstr=s.format('聊城公司',班组,now.strftime("%Y-%m-%d"),now.strftime("%H:%M:%S"),STRGLO1[0:2],flnum,flnum1,0)
-                shujuku.sqlzsg(sqlstr)
-
-                flnum2 = round(struct.unpack('!f', bytes.fromhex(STRGLO2[10:14] + STRGLO2[6:10]))[0],2)
-                mywin.label_11.setText(str(flnum2))  # 目标流量
+                if not STRGLO3.__eq__('5'):
+                    shujuku.sqlzsg(sqlstr)
 
             except Exception as e:
                 print(e)
-                mywin.label_3.setText('数据异常！')
-                mywin.label_5.setText('数据异常！')
+                mywin.label_3.setText('数据异常！')#累计流量
+                mywin.label_5.setText('数据异常！')#瞬时流量
         time.sleep(60)
 
 # 打开串口
@@ -218,7 +213,7 @@ str4 = '03040010000271EC'  # 读取状态
 
 str5 = '0305000dff001c1b'  # 启动
 str6 = '0305000d00005deb'  # 停止
-str7 = '03100000000204'
+str7 = '03100000000204'    # 设置目标流量命令的前面部分，+数据位+校验位即是完整命令。
 
 if __name__ == "__main__":
     readcon= readconfig.ReadConfig()#实例化读配置文件类。
