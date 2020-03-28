@@ -123,19 +123,20 @@ def ReadData(ser):
         styleTime = now.strftime("%Y-%m-%d %H:%M:%S")
         if (ser.is_open):
 
-            DWritePort(ser, str1)
+            DWritePort(ser, str1)#读取目标流量
             time.sleep(1)
             STRGLO2 = str(binascii.b2a_hex(ser.readline()))[2:-1]
 
-            DWritePort(ser, str2)
+            DWritePort(ser, str2)#读取累计流量
             time.sleep(1)
             STRGLO = str(binascii.b2a_hex(ser.readline()))[2:-1]
 
-            DWritePort(ser, str3)
+            DWritePort(ser, str3)#读取瞬时流量
             time.sleep(1)
             STRGLO1 = str(binascii.b2a_hex(ser.readline()))[2:-1]
+            print(STRGLO1)
 
-            DWritePort(ser, str4)
+            DWritePort(ser, str4)#读取状态
             time.sleep(1)
             STRGLO3 = str(binascii.b2a_hex(ser.readline()))[11:12]
             print(STRGLO3)
@@ -167,6 +168,7 @@ def ReadData(ser):
                 sqlstr=s.format('聊城公司',班组,now.strftime("%Y-%m-%d"),now.strftime("%H:%M:%S"),STRGLO1[0:2],flnum,flnum1,0)
                 if not STRGLO3.__eq__('5'):
                     shujuku.sqlzsg(sqlstr)
+                    print('写数据库')
 
             except Exception as e:
                 print(e)
