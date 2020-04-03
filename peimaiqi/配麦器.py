@@ -6,6 +6,7 @@ from peimaiqi import readconfig, shujuku
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from peimaiqi.untitled import Ui_MainWindow
 import peimaiqi.crcmodbus as crc
+from peimaiqi.baojing import *
 
 class Mymainform(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
@@ -128,13 +129,8 @@ def ReadData(ser):
     global STRGLO,STRGLO1,STRGLO2,BOOL,dakai
     # 循环接收数据，此为死循环，可用线程实现
     while BOOL:# and dakai is True:
-        mon = time.localtime().tm_mon
-        day = time.localtime().tm_mday
         hour = time.localtime().tm_hour
-        min = time.localtime().tm_min
         now = datetime.datetime.now()
-        # 转换为指定的格式:
-        styleTime = now.strftime("%Y-%m-%d %H:%M:%S")
         if (ser.is_open):
 
             DWritePort(ser, str1)#读取目标流量
@@ -154,19 +150,7 @@ def ReadData(ser):
             time.sleep(1)
             STRGLO3 = str(binascii.b2a_hex(ser.readline()))[11:12]
             print(STRGLO3)
-            if STRGLO3.__eq__('6'):
-                mywin.label_34.setText("正常运行")
-            elif STRGLO3.__eq__('5'):
-                mywin.label_34.setText("停止运行")
-            elif STRGLO3.__eq__('4'):
-                mywin.label_34.setText("卡料报警")
-            elif STRGLO3.__eq__('3'):
-                mywin.label_34.setText("超量程报警")
-            elif STRGLO3.__eq__('2'):
-                mywin.label_34.setText("电压超限报警")
-            else:
-                mywin.label_34.setText("空料报警")
-
+            mywin.label_34.setText(baojing(STRGLO3))#调用baojing.py中的报警信息处理函数，并返回值。
             try:
                 flnum2 = round(struct.unpack('!f', bytes.fromhex(STRGLO2[10:14] + STRGLO2[6:10]))[0],2)
                 mywin.label_11.setText(str(flnum2))  # 目标流量
@@ -180,10 +164,9 @@ def ReadData(ser):
                 mywin.label_5.setText(str(flnum1))#瞬时流量
                 s = "INSERT INTO liuliang VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')"
                 sqlstr=s.format('一厂区三车间',班组,now.strftime("%Y-%m-%d"),now.strftime("%H:%M:%S"),STRGLO1[0:2],flnum,flnum1,0)
-                if not STRGLO3.__eq__('5'):
+                if not STRGLO3.__eq__('5'):#只要不是停止运行就写数据库。
                     shujuku.sqlzsg(sqlstr)
                     print('写数据库')
-
             except Exception as e:
                 print(e)
                 mywin.label_3.setText('数据异常！')#累计流量
