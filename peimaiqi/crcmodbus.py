@@ -2,7 +2,7 @@
 #浮点数转十六进制；
 #判断输入的是否是数字；
 from binascii import *
-from crcmod import *
+import crcmod
 import struct
 
 

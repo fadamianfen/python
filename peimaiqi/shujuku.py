@@ -1,7 +1,8 @@
+#
+#
+#
 import pymssql
 from peimaiqi import readconfig
-
-
 class MSSQL(object):
     '''
     对pymssql的简单封装
