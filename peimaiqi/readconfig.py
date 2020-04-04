@@ -9,16 +9,16 @@
 # readconf.get_db(confstr,param)函数获取config.cfg中的内容。
 #函数中的两个参数分别是配置文件中的section和该section下面的健。函数返回的是该健的value。
 #比如 readconf.get_db("section1","b")返回的是2，注意参数要用单引号或双引号引起来。
-import configparser
-import os,sys
-
+from configparser import ConfigParser
+from sys import argv
+from os import path
 class ReadConfig:
     """定义一个读取配置文件的类"""
 
     def __init__(self, filepath=None):
-        root_dir = os.path.dirname(os.path.realpath(sys.argv[0]))
-        configpath = os.path.join(root_dir, "config.cfg")
-        self.cf = configparser.ConfigParser()
+        root_dir = path.dirname(path.realpath(argv[0]))
+        configpath = path.join(root_dir, "config.cfg")
+        self.cf = ConfigParser()
         print(configpath)
         self.cf.read(configpath,encoding='UTF-8-sig')
         #这里存在的问题是windows编辑配置文件保存后，会在文件前面加上‘\ufeff’,造成文件read失败，编码必须使用UTF-8-sig才行。

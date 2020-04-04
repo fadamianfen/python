@@ -1,13 +1,15 @@
-import sys
-
+from sys import exit,argv
 from PyQt5 import QtWidgets
-
 from peimaiqi import readconfig, shujuku
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from peimaiqi.untitled import Ui_MainWindow
 import peimaiqi.crcmodbus as crc
 from peimaiqi.baojing import *
 from peimaiqi.chuankou import *
+from threading import Thread
+from datetime import datetime
+from time import localtime,sleep
+from binascii import b2a_hex
 
 class Mymainform(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
@@ -35,7 +37,7 @@ class Mymainform(QMainWindow, Ui_MainWindow):
                 str = '0105000dff001df9'  # 1号秤启动命令
                 DWritePort(ser, str)
                 #time.sleep(0.5)
-                STRGL = str(binascii.b2a_hex(ser.readline()))[2:-1]
+                STRGL = str(b2a_hex(ser.readline()))[2:-1]
                 print(STRGL)
                 if STRGL.__eq__(str):
                     mywin.label_34.setText("启动成功")
@@ -50,7 +52,7 @@ class Mymainform(QMainWindow, Ui_MainWindow):
                 str = '0205000dff001dca'  # 2#秤启动命令
                 DWritePort(ser, str)
                 #time.sleep(0.5)
-                STRGL = str(binascii.b2a_hex(ser.readline()))[2:-1]
+                STRGL = str(b2a_hex(ser.readline()))[2:-1]
                 print(STRGL)
                 if STRGL.__eq__(str):
                     mywin.label_36.setText("启动成功")
@@ -65,7 +67,7 @@ class Mymainform(QMainWindow, Ui_MainWindow):
                 str = '0205000dff001c1b'  # 3#秤启动命令
                 DWritePort(ser, str)
                 #time.sleep(0.5)
-                STRGL = str(binascii.b2a_hex(ser.readline()))[2:-1]
+                STRGL = str(b2a_hex(ser.readline()))[2:-1]
                 print(STRGL)
                 if STRGL.__eq__(str):
                     mywin.label_38.setText("启动成功")
@@ -80,7 +82,7 @@ class Mymainform(QMainWindow, Ui_MainWindow):
                 str = '0105000d00005c09'  # 1号秤停止命令
                 DWritePort(ser, str)
                 #time.sleep(0.5)
-                STRGL = str(binascii.b2a_hex(ser.readline()))[2:-1]
+                STRGL = str(b2a_hex(ser.readline()))[2:-1]
                 if STRGL.__eq__(str):
                     mywin.label_34.setText("停止成功")
                 else:
@@ -94,7 +96,7 @@ class Mymainform(QMainWindow, Ui_MainWindow):
                 str = '0205000d00005c3a'#2号秤停止命令
                 DWritePort(ser, str)
                 #time.sleep(0.5)
-                STRGL = str(binascii.b2a_hex(ser.readline()))[2:-1]
+                STRGL = str(b2a_hex(ser.readline()))[2:-1]
                 if STRGL.__eq__(str):
                     mywin.label_36.setText("停止成功")
                 else:
@@ -108,7 +110,7 @@ class Mymainform(QMainWindow, Ui_MainWindow):
                 str = '0105000d00005deb'  # 3号秤停止命令
                 DWritePort(ser, str)
                 #time.sleep(0.5)
-                STRGL = str(binascii.b2a_hex(ser.readline()))[2:-1]
+                STRGL = str(b2a_hex(ser.readline()))[2:-1]
                 if STRGL.__eq__(str):
                     mywin.label_38.setText("停止成功")
                 else:
@@ -124,7 +126,7 @@ class Mymainform(QMainWindow, Ui_MainWindow):
                 if (ser.is_open):
                     DWritePort(ser, st1)
                     #time.sleep(0.5)
-                    STRGL = str(binascii.b2a_hex(ser.readline()))[2:-1]
+                    STRGL = str(b2a_hex(ser.readline()))[2:-1]
                     if STRGL.__eq__('01100000000241c8'):
                         mywin.label_34.setText("设置成功")
                         #刷新一下目标流量前端显示
@@ -143,7 +145,7 @@ class Mymainform(QMainWindow, Ui_MainWindow):
                 if (ser.is_open):
                     DWritePort(ser, st1)
                     #time.sleep(0.5)
-                    STRGL = str(binascii.b2a_hex(ser.readline()))[2:-1]
+                    STRGL = str(b2a_hex(ser.readline()))[2:-1]
                     if STRGL.__eq__('02100000000241fb'):
                         mywin.label_36.setText("设置成功")
                         # 刷新一下目标流量前端显示
@@ -162,7 +164,7 @@ class Mymainform(QMainWindow, Ui_MainWindow):
                 if (ser.is_open):
                     DWritePort(ser, st1)
                     #time.sleep(0.1)
-                    STRGL = str(binascii.b2a_hex(ser.readline()))[2:-1]
+                    STRGL = str(b2a_hex(ser.readline()))[2:-1]
                     if STRGL.__eq__('031000000002402a'):
                         mywin.label_38.setText("设置成功")
                         # 刷新一下目标流量前端显示
@@ -179,7 +181,7 @@ class Mymainform(QMainWindow, Ui_MainWindow):
                 str = '0105000eff00edf9'  # 清除1号秤报警，2号秤0205000eff00edca，3号秤0305000eff00ec1b
                 DWritePort(ser, str)
                 #time.sleep(0.5)
-                STRGL = str(binascii.b2a_hex(ser.readline()))[2:-1]
+                STRGL = str(b2a_hex(ser.readline()))[2:-1]
                 print(STRGL)
                 if STRGL.__eq__(str):
                     mywin.label_34.setText("清除成功")
@@ -194,7 +196,7 @@ class Mymainform(QMainWindow, Ui_MainWindow):
                 str = '0205000eff00edca'  # 清除2号秤报警
                 DWritePort(ser, str)
                 #time.sleep(0.5)
-                STRGL = str(binascii.b2a_hex(ser.readline()))[2:-1]
+                STRGL = str(b2a_hex(ser.readline()))[2:-1]
                 print(STRGL)
                 if STRGL.__eq__(str):
                     mywin.label_36.setText("清除成功")
@@ -209,7 +211,7 @@ class Mymainform(QMainWindow, Ui_MainWindow):
                 str = '0305000eff00ec1b'  # 清除3号秤报警
                 DWritePort(ser, str)
                 #time.sleep(0.5)
-                STRGL = str(binascii.b2a_hex(ser.readline()))[2:-1]
+                STRGL = str(b2a_hex(ser.readline()))[2:-1]
                 print(STRGL)
                 if STRGL.__eq__(str):
                     mywin.label_38.setText("清除成功")
@@ -232,8 +234,6 @@ class Mymainform(QMainWindow, Ui_MainWindow):
         pass
 
 # 串口模块区域
-import threading, datetime, time, struct, binascii
-
 STRGLO1 = ""  # 暂存1号秤上次累计流量
 STRGLO2 = ""  # 暂存2号秤上次累计流量
 BOOL = True  # 读取标志位
@@ -242,8 +242,8 @@ def ReadData(ser):
     global STRGLO1,STRGLO2
     # 循环接收数据，此为死循环，可用线程实现
     while BOOL:
-        hour = time.localtime().tm_hour
-        now = datetime.datetime.now()
+        hour = localtime().tm_hour
+        now = datetime.now()
         if (ser.is_open):
             try:
                 #1号秤信息
@@ -255,7 +255,7 @@ def ReadData(ser):
                 shunshi1=readserial(ser,'0103000A0002E409')#读取1号瞬时计流量
                 mywin.label_5.setText(str(shunshi1))  # 显示1号秤瞬时流量
                 DWritePort(ser, '010400100002700e')  # 读取状态
-                zhuangtai1 = str(binascii.b2a_hex(ser.readline()))[11:12]
+                zhuangtai1 = str(b2a_hex(ser.readline()))[11:12]
                 mywin.label_34.setText(baojing(zhuangtai1))  # 调用baojing.py中的报警信息处理函数，并返回值。
             except Exception as e:
                 print(e)
@@ -271,7 +271,7 @@ def ReadData(ser):
                 shunshi2=readserial(ser,'0203000A0002E43a')#读取2号瞬时计流量
                 mywin.label_20.setText(str(shunshi2))  # 显示2号秤瞬时流量
                 DWritePort(ser, '020400100002703d')  # 读取状态
-                zhuangtai2 = str(binascii.b2a_hex(ser.readline()))[11:12]
+                zhuangtai2 = str(b2a_hex(ser.readline()))[11:12]
                 mywin.label_36.setText(baojing(zhuangtai2))  # 调用baojing.py中的报警信息处理函数，并返回值。
             except Exception as e:
                 print(e)
@@ -289,7 +289,7 @@ def ReadData(ser):
                     print('写数据库')
             except Exception as e:
                 print(e)
-        time.sleep(60)
+        sleep(60)
 
 
 str7 = '01100000000204'    # 设置目标流量命令的前面部分，+数据位+校验位即是完整命令。
@@ -298,10 +298,10 @@ if __name__ == "__main__":
     readcon= readconfig.ReadConfig()#实例化读配置文件类。
     port=readcon.get_db('serial','串口')
     betelv=readcon.get_db('serial','波特率')
-    app = QApplication(sys.argv)
+    app = QApplication(argv)
     mywin = Mymainform()
     mywin.show()
     ser, ret = DOpenPort(port, betelv)
     if (ser.is_open):
-        threading.Thread(target=ReadData, args=(ser,)).start()
-    sys.exit(app.exec_())
+        Thread(target=ReadData, args=(ser,)).start()
+    exit(app.exec_())

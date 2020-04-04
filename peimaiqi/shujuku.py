@@ -1,7 +1,7 @@
 #
 #
 #
-import pymssql
+from pymssql import connect
 from peimaiqi import readconfig
 class MSSQL(object):
     '''
@@ -24,7 +24,7 @@ class MSSQL(object):
         '''
         #if not self.db:
          #   raise (NameError,"没有设置数据库信息")
-        self.connect=pymssql.connect(host=self.host,user=self.user,password=self.pwd,database=self.db,charset="utf8")
+        self.connect=connect(host=self.host,user=self.user,password=self.pwd,database=self.db,charset="utf8")
         cur=self.connect.cursor()
         if not cur:
             raise (NameError,"链接数据库失败")
