@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow
 from peimaiqi.untitled import Ui_MainWindow
 import peimaiqi.crcmodbus as crc
 from peimaiqi.baojing import *
+from peimaiqi.chuankou import *
 
 class Mymainform(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
@@ -173,37 +174,6 @@ def ReadData(ser):
                 mywin.label_5.setText('数据异常！')#瞬时流量
         time.sleep(60)
 
-# 打开串口
-# 端口，GNU / Linux上的/ dev / ttyUSB0 等 或 Windows上的 COM3 等
-# 波特率，标准值之一：50,75,110,134,150,200,300,600,1200,1800,2400,4800,9600,19200,38400,57600,115200
-# 超时设置,None：永远等待操作，0为立即返回请求结果，其他值为等待超时时间(单位为秒）
-def DOpenPort(portx, bps):
-    ret = False
-    try:
-        # 打开串口，并得到串口对象
-        ser = serial.Serial(portx, bps, timeout=0.5)
-        ser.bytesize = 8  # 可有可无
-        ser.parity = 'N'  # 可有可无
-        ser.stopbits = 1  # 可有可无
-        # 判断是否打开成功
-        if (ser.is_open):
-            ret = True
-            threading.Thread(target=ReadData, args=(ser,)).start()
-    except Exception as e:
-        mywin.label_34.setText('线程异常！')
-    return ser, ret
-
-# 关闭串口
-def DColsePort(ser):
-    global BOOL
-    BOOL = False
-    ser.close()
-
-# 写数据
-def DWritePort(ser, text):
-    result = ser.write(bytes.fromhex(text))  # 写数据
-    return result
-
 
 str1 = '010300000002C40B'  # 读取目标流量命令
 str2 = '01030008000245C9'  # 读取累计流量
@@ -225,4 +195,6 @@ if __name__ == "__main__":
     mywin = Mymainform()
     mywin.show()
     ser, ret = DOpenPort(port, betelv)
+    if (ser.is_open):
+        threading.Thread(target=ReadData, args=(ser,)).start()
     sys.exit(app.exec_())
