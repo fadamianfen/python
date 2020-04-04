@@ -29,14 +29,15 @@ class Mymainform(QMainWindow, Ui_MainWindow):
             #event.accept()
         else:
             event.ignore()
-    def qidong1(self):  #
+    def qidong1(self):  # 1号秤启动
         try:
             if (ser.is_open):
-                DWritePort(ser, str5)
-                time.sleep(0.5)
-                STRGLO5 = str(binascii.b2a_hex(ser.readline()))[2:-1]
-                print(STRGLO5)
-                if STRGLO5.__eq__(str5):
+                str = '0105000dff001df9'  # 1号秤启动命令
+                DWritePort(ser, str)
+                #time.sleep(0.5)
+                STRGL = str(binascii.b2a_hex(ser.readline()))[2:-1]
+                print(STRGL)
+                if STRGL.__eq__(str):
                     mywin.label_34.setText("启动成功")
                 else:
                     mywin.label_34.setText("启动失败")
@@ -44,36 +45,87 @@ class Mymainform(QMainWindow, Ui_MainWindow):
             print(e)
             mywin.label_34.setText("启动失败")
     def qidong2(self):  #
-        pass
-    def qidong3(self):  #
-        pass
-    def tingzhi1(self):  #
         try:
             if (ser.is_open):
-                DWritePort(ser, str6)
-                time.sleep(0.5)
-                STRGLO6 = str(binascii.b2a_hex(ser.readline()))[2:-1]
-                if STRGLO6.__eq__(str6):
+                str = '0205000dff001dca'  # 2#秤启动命令
+                DWritePort(ser, str)
+                #time.sleep(0.5)
+                STRGL = str(binascii.b2a_hex(ser.readline()))[2:-1]
+                print(STRGL)
+                if STRGL.__eq__(str):
+                    mywin.label_36.setText("启动成功")
+                else:
+                    mywin.label_36.setText("启动失败")
+        except Exception as e:
+            print(e)
+            mywin.label_36.setText("启动失败")
+    def qidong3(self):  #3号秤启动
+        try:
+            if (ser.is_open):
+                str = '0205000dff001c1b'  # 3#秤启动命令
+                DWritePort(ser, str)
+                #time.sleep(0.5)
+                STRGL = str(binascii.b2a_hex(ser.readline()))[2:-1]
+                print(STRGL)
+                if STRGL.__eq__(str):
+                    mywin.label_38.setText("启动成功")
+                else:
+                    mywin.label_38.setText("启动失败")
+        except Exception as e:
+            print(e)
+            mywin.label_38.setText("启动失败")
+    def tingzhi1(self):  #1号秤停止
+        try:
+            if (ser.is_open):
+                str = '0105000d00005c09'  # 1号秤停止命令
+                DWritePort(ser, str)
+                #time.sleep(0.5)
+                STRGL = str(binascii.b2a_hex(ser.readline()))[2:-1]
+                if STRGL.__eq__(str):
                     mywin.label_34.setText("停止成功")
                 else:
                     mywin.label_34.setText("停止失败")
         except Exception as e:
             print(e)
             mywin.label_34.setText("停止失败")
-    def tingzhi2(self):  #
-        pass
-    def tingzhi3(self):  #
-        pass
-    def shezhi1(self):  #
+    def tingzhi2(self):  #2号秤停止
+        try:
+            if (ser.is_open):
+                str = '0205000d00005c3a'#2号秤停止命令
+                DWritePort(ser, str)
+                #time.sleep(0.5)
+                STRGL = str(binascii.b2a_hex(ser.readline()))[2:-1]
+                if STRGL.__eq__(str):
+                    mywin.label_36.setText("停止成功")
+                else:
+                    mywin.label_36.setText("停止失败")
+        except Exception as e:
+            print(e)
+            mywin.label_36.setText("停止失败")
+    def tingzhi3(self):  # 3号秤停止
+        try:
+            if (ser.is_open):
+                str = '0105000d00005deb'  # 3号秤停止命令
+                DWritePort(ser, str)
+                #time.sleep(0.5)
+                STRGL = str(binascii.b2a_hex(ser.readline()))[2:-1]
+                if STRGL.__eq__(str):
+                    mywin.label_38.setText("停止成功")
+                else:
+                    mywin.label_38.setText("停止失败")
+        except Exception as e:
+            print(e)
+            mywin.label_38.setText("停止失败")
+    def shezhi1(self):  #1号秤设置目标流量
         if crc.is_number(mywin.lineEdit.text().strip()):
-            st = crc.float_to_hex(float(mywin.lineEdit.text().strip()))
-            st1=str(crc.crc16Add(str7+st)).replace(' ','')
+            st = crc.float_to_hex(float(mywin.lineEdit.text().strip()))#浮点数转十六进制
+            st1=str(crc.crc16Add(str7+st)).replace(' ','')#返回带校验位的十六进命令串
             try:
                 if (ser.is_open):
                     DWritePort(ser, st1)
-                    time.sleep(0.5)
-                    STRGLO7 = str(binascii.b2a_hex(ser.readline()))[2:-1]
-                    if STRGLO7.__eq__('01100000000241c8'):
+                    #time.sleep(0.5)
+                    STRGL = str(binascii.b2a_hex(ser.readline()))[2:-1]
+                    if STRGL.__eq__('01100000000241c8'):
                         mywin.label_34.setText("设置成功")
                         #刷新一下目标流量前端显示
                         mywin.label_11.setText(mywin.lineEdit.text().strip())  # 目标流量
@@ -83,19 +135,53 @@ class Mymainform(QMainWindow, Ui_MainWindow):
             except Exception as e:
                 print(e)
                 mywin.label_34.setText("设置失败")
+    def shezhi2(self):  #2号秤设置目标流量
+        if crc.is_number(mywin.lineEdit_2.text().strip()):
+            st = crc.float_to_hex(float(mywin.lineEdit_2.text().strip()))  # 浮点数转十六进制
+            st1 = str(crc.crc16Add(str7 + st)).replace(' ', '')  # 返回带校验位的十六进命令串
+            try:
+                if (ser.is_open):
+                    DWritePort(ser, st1)
+                    #time.sleep(0.5)
+                    STRGL = str(binascii.b2a_hex(ser.readline()))[2:-1]
+                    if STRGL.__eq__('02100000000241fb'):
+                        mywin.label_36.setText("设置成功")
+                        # 刷新一下目标流量前端显示
+                        mywin.label_15.setText(mywin.lineEdit_2.text().strip())  # 更新目标流量
 
-    def shezhi2(self):  #
-        pass
-    def shezhi3(self):  #
-        pass
-    def qingbaojing(self):
+                    else:
+                        mywin.label_36.setText("设置失败")
+            except Exception as e:
+                print(e)
+                mywin.label_36.setText("设置失败")
+    def shezhi3(self):  #3号秤设置目标流量
+        if crc.is_number(mywin.lineEdit_3.text().strip()):
+            st = crc.float_to_hex(float(mywin.lineEdit_3.text().strip()))  # 浮点数转十六进制
+            st1 = str(crc.crc16Add(str7 + st)).replace(' ', '')  # 返回带校验位的十六进命令串
+            try:
+                if (ser.is_open):
+                    DWritePort(ser, st1)
+                    #time.sleep(0.1)
+                    STRGL = str(binascii.b2a_hex(ser.readline()))[2:-1]
+                    if STRGL.__eq__('031000000002402a'):
+                        mywin.label_38.setText("设置成功")
+                        # 刷新一下目标流量前端显示
+                        mywin.label_27.setText(mywin.lineEdit_3.text().strip())  # 更新目标流量
+
+                    else:
+                        mywin.label_38.setText("设置失败")
+            except Exception as e:
+                print(e)
+                mywin.label_38.setText("设置失败")
+    def qingbaojing(self):#1号秤清报警
         try:
             if (ser.is_open):
-                DWritePort(ser, str8)
+                str = '0105000eff00edf9'  # 清除1号秤报警，2号秤0205000eff00edca，3号秤0305000eff00ec1b
+                DWritePort(ser, str)
                 time.sleep(0.5)
-                STRGLO8 = str(binascii.b2a_hex(ser.readline()))[2:-1]
-                print(STRGLO8)
-                if STRGLO8.__eq__(str8):
+                STRGL = str(binascii.b2a_hex(ser.readline()))[2:-1]
+                print(STRGL)
+                if STRGL.__eq__(str):
                     mywin.label_34.setText("清除成功")
                 else:
                     mywin.label_34.setText("清除失败")
@@ -116,9 +202,7 @@ class Mymainform(QMainWindow, Ui_MainWindow):
         pass
 
 # 串口模块区域
-import serial, threading, datetime, time, struct, binascii
-import serial.tools.list_ports
-
+import threading, datetime, time, struct, binascii
 
 STRGLO = ""  # 读取的累计流量
 STRGLO1 = ""  # 读取的瞬时流量
@@ -133,7 +217,19 @@ def ReadData(ser):
         hour = time.localtime().tm_hour
         now = datetime.datetime.now()
         if (ser.is_open):
+            #1号秤信息
+            mubiao1=readserial(ser,'010300000002C40B')#读取1号秤目标流量
+            mywin.label_11.setText(str(mubiao1))#显示1号秤目标流量
+            leiji1=readserial(ser,'01030008000245C9')#读取1号秤累计流量
+            mywin.label_3.setText(str(leiji1))  # 显示1号秤累计流量
+            shunshi1=readserial(ser,'0103000A0002E409')#读取1号瞬时计流量
+            mywin.label_5.setText(str(shunshi1))  # 显示1号秤瞬时流量
+            DWritePort(ser, '010400100002700')  # 读取状态
+            zhuangtai1 = str(binascii.b2a_hex(ser.readline()))[11:12]
+            mywin.label_34.setText(baojing(zhuangtai1))  # 调用baojing.py中的报警信息处理函数，并返回值。
 
+
+'''
             DWritePort(ser, str1)#读取目标流量
             time.sleep(1)
             STRGLO2 = str(binascii.b2a_hex(ser.readline()))[2:-1]
@@ -152,17 +248,8 @@ def ReadData(ser):
             STRGLO3 = str(binascii.b2a_hex(ser.readline()))[11:12]
             print(STRGLO3)
             mywin.label_34.setText(baojing(STRGLO3))#调用baojing.py中的报警信息处理函数，并返回值。
+            '''
             try:
-                flnum2 = round(struct.unpack('!f', bytes.fromhex(STRGLO2[10:14] + STRGLO2[6:10]))[0],2)
-                mywin.label_11.setText(str(flnum2))  # 目标流量
-                flnum = round(struct.unpack('!f', bytes.fromhex(STRGLO[10:14] + STRGLO[6:10]))[0], 4)
-                mywin.label_3.setText(str(flnum))#累计流量
-                if hour>=7 and hour<19:
-                    班组='白班'
-                else:
-                    班组='夜班'
-                flnum1 = round(struct.unpack('!f', bytes.fromhex(STRGLO1[10:14] + STRGLO1[6:10]))[0],4)
-                mywin.label_5.setText(str(flnum1))#瞬时流量
                 s = "INSERT INTO liuliang VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')"
                 sqlstr=s.format('一厂区三车间',班组,now.strftime("%Y-%m-%d"),now.strftime("%H:%M:%S"),STRGLO1[0:2],flnum,flnum1,0)
                 if not STRGLO3.__eq__('5'):#只要不是停止运行就写数据库。
@@ -179,13 +266,7 @@ str1 = '010300000002C40B'  # 读取目标流量命令
 str2 = '01030008000245C9'  # 读取累计流量
 str3 = '0103000A0002E409'  # 读取瞬时流量
 str4 = '010400100002700E' #读取状态
-
-str5 = '0105000dff001df9'  # 启动
-str6 = '0105000d00005c09'  # 停止
 str7 = '01100000000204'    # 设置目标流量命令的前面部分，+数据位+校验位即是完整命令。
-str8 = '0105000eff00edf9'    #清除1号秤报警
-str9 = '0205000eff00edca'    #清除2号秤报警
-str10 = '0305000eff00ec1b'    #清除3号秤报警
 
 if __name__ == "__main__":
     readcon= readconfig.ReadConfig()#实例化读配置文件类。
