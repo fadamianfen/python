@@ -258,6 +258,7 @@ def ReadData(ser):
                 zhuangtai1 = str(binascii.b2a_hex(ser.readline()))[11:12]
                 mywin.label_34.setText(baojing(zhuangtai1))  # 调用baojing.py中的报警信息处理函数，并返回值。
             except Exception as e:
+                print(e)
                 mywin.label_3.setText('数据异常！')  # 累计流量
                 mywin.label_5.setText('数据异常！')  # 瞬时流量
             try:
@@ -273,6 +274,7 @@ def ReadData(ser):
                 zhuangtai2 = str(binascii.b2a_hex(ser.readline()))[11:12]
                 mywin.label_36.setText(baojing(zhuangtai2))  # 调用baojing.py中的报警信息处理函数，并返回值。
             except Exception as e:
+                print(e)
                 mywin.label_17.setText('数据异常！')  # 累计流量
                 mywin.label_20.setText('数据异常！')  # 瞬时流量
             try:
